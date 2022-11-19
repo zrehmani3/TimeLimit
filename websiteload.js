@@ -2,7 +2,7 @@ let hasShownLimitPassedDialog = false;
 let hasEverShownLimitDialog = false;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (true || request.secsPassed >= request.dailyLimit && !hasShownLimitPassedDialog) {
+  if (request.secsPassed >= request.dailyLimit && !hasShownLimitPassedDialog) {
     fetch(chrome.runtime.getURL('/modal.html'))
       .then(response => response.text())
       .then(data => {
