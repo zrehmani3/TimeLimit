@@ -2,7 +2,7 @@ let hasShownLimitPassedDialog = false;
 let hasEverShownLimitDialog = false;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.secsPassed >= request.dailyLimit && !hasShownLimitPassedDialog) {
+  if (true || request.secsPassed >= request.dailyLimit && !hasShownLimitPassedDialog) {
     fetch(chrome.runtime.getURL('/modal.html'))
       .then(response => response.text())
       .then(data => {
@@ -11,7 +11,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           hasEverShownLimitDialog = true;
         }
         hasShownLimitPassedDialog = true;
+        document.getElementById('hourglass').src = chrome.runtime.getURL("images/waiting-time-icon.png");
         document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('overlay').style.animation = 'append-animate .5s linear forwards';
         document.getElementById('closeTab').onclick = function() {
           chrome.runtime.sendMessage({closeTab: true});
           hasShownLimitPassedDialog = false;
@@ -41,7 +43,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 function resetModal() {
   hasShownLimitPassedDialog = false;
-  document.getElementById('overlay').style.display = 'none';
+  document.getElementById('overlay').style.animation = 'remove-animate .5s linear forwards';
 }
 
 let tabURL = (new URL(location.href)).origin;

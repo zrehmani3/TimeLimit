@@ -6,16 +6,17 @@
     <body>
         <div id="overlay" class="timeLimitOverlay">
             <div class="timeLimitOverlayContent">
+                <img id="hourglass" style="height: 100px; width: 100px;" alt="Hourglass">
                 <h1>
                     You've exceeded your daily limit
                 </h1>
-                <h4>
+                <h2>
                     What would you like to do?
-                </h4>
-                <button style="width: 200px; margin-top: 12px;" id="closeTab">Close tab</button>
-                <button style="display: none; width: 200px; margin-top: 12px;" id="extendOneMinute">Extend by 1 minute</button>
-                <button style="width: 200px; margin-top: 12px;" id="extendLimit">Extend by 15 minutes</button>
-                <button style="width: 200px; margin-top: 12px;" id="ignoreToday">Ignore limit today</button>
+                </h2>
+                <button class="timeLimitButton" style="width: 200px; margin-top: 12px;" id="closeTab">Close tab</button>
+                <button class="timeLimitButton" style="display: none; width: 200px; margin-top: 12px;" id="extendOneMinute">Extend by 1 minute</button>
+                <button class="timeLimitButton" style="width: 200px; margin-top: 12px;" id="extendLimit">Extend by 15 minutes</button>
+                <button class="timeLimitButton" style="width: 200px; margin-top: 12px;" id="ignoreToday">Ignore limit today</button>
             </div>
         </div>
     </body>

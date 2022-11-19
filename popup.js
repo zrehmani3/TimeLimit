@@ -37,14 +37,12 @@ function getMinutesFromSeconds(secs) {
 function constructWebsitesTrackedTable(tabURL) {
     if (!(tabURL in websiteMap)) {
         let addWebsiteHTML = '<div class="addWebsite">';
-        addWebsiteHTML += '<h3>Add website to TimeLimit tracker</h3>';
-        addWebsiteHTML += '<p>';
-        addWebsiteHTML += tabURL;
-        addWebsiteHTML += '</p>';
+        addWebsiteHTML += '<h3>Add <span style="text-decoration: underline;">' + tabURL + '</span> to TimeLimit tracker?</h3>';
         addWebsiteHTML += '<p>Minutes';
-        addWebsiteHTML += '<input style="margin-left: 8px;" id="limitInput" name="limitInput">';
-        addWebsiteHTML += '<button style="margin-left:12px;" id="addWebsiteButton">Add</button>';
+        addWebsiteHTML += '<input style="margin-left: 8px; width: 32px; height: 22px; border: 1px solid #ccc; border-radius: 4px;" id="limitInput" name="limitInput">';
+        addWebsiteHTML += '<button class="button" style="margin-left:8px;" id="addWebsiteButton">Add</button>';
         addWebsiteHTML += '</p>';
+        addWebsiteHTML += '<hr />';
         addWebsiteHTML += '</div>';
         document.querySelector('.addWebsite').innerHTML = addWebsiteHTML;
         document.getElementById('limitInput').defaultValue = DEFAULT_LIMIT_MINUTES;
@@ -95,10 +93,10 @@ function constructWebsitesTrackedTable(tabURL) {
             allTimeLimitsHTML += (websiteMap[website].dailyLimit === Number.MAX_SAFE_INTEGER ? 'Ignore' : getMinutesFromSeconds(websiteMap[website].dailyLimit));
             allTimeLimitsHTML += '</td>';
             allTimeLimitsHTML += '<td>';
-            allTimeLimitsHTML += '<input style="width: 48px;" id="' + constructClassName('tableInputLimit', website) + '" name="' + constructClassName('tableInputLimit', website) + '">';
+            allTimeLimitsHTML += '<input style="width: 32px; border: 1px solid #ccc; border-radius: 4px;" id="' + constructClassName('tableInputLimit', website) + '" name="' + constructClassName('tableInputLimit', website) + '">';
             allTimeLimitsHTML += '</td>';
             allTimeLimitsHTML += '<td>';
-            allTimeLimitsHTML += '<button id="' + constructClassName('updateButton', website) + '"><span>&#8634;</span></button>';
+            allTimeLimitsHTML += '<button class="button" id="' + constructClassName('updateButton', website) + '"><span>&#8634;</span></button>';
             allTimeLimitsHTML += '</td>';
             allTimeLimitsHTML += '</tr>';
         });
@@ -130,12 +128,12 @@ function constructWebsitesTrackedTable(tabURL) {
 }
 
 function constructWebsiteHistoryTable(tabURL) {
-    console.log(websiteHistoryMap);
     if (Object.keys(websiteHistoryMap).length === 0) {
         return;
     }
 
-    let websiteHistoryDataHTML = '<div style="margin-top: 12px;">';
+    let websiteHistoryDataHTML = '<div>';
+    websiteHistoryDataHTML += '<hr style="margin-top: 12px; margin-bottom: 12px;" />'
     websiteHistoryDataHTML += '<label for="dateSelector">See website history data for:</label>';
     websiteHistoryDataHTML += '<select style="margin-left: 8px;" name="dateSelector" id="dateSelector">';
     websiteHistoryDataHTML += '<option value="" selected disabled hidden>Select date</option>';

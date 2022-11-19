@@ -48,6 +48,10 @@ chrome.storage.local.get(null, data => {
     if (data.websiteHistoryMap) {
         websiteHistoryMap = data.websiteHistoryMap;
     }
+    if (data.lastTrackedDate) {
+        lastTrackedDate = data.lastTrackedDate;
+    }
+
     setInterval(updateTimer, 1000);
 });
 
@@ -101,6 +105,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 function updateLocalStorage() {
     chrome.storage.local.set({
+        lastTrackedDate: lastTrackedDate,
         websiteMap: websiteMap,
         websiteHistoryMap: websiteHistoryMap,
     })
