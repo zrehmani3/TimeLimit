@@ -58,13 +58,10 @@ chrome.storage.local.get(null, data => {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.closeTab) {
         chrome.tabs.remove(sender.tab.id);
-    } else if (request.extendLimit) {
+    } else if (request.extendTimeLimit) {
         if (request.tabURL in websiteMap) {
-            websiteMap[request.tabURL].dailyLimit = websiteMap[request.tabURL].secsPassed + DEFAULT_LIMIT;
-        }
-    } else if (request.extendOneMinute) {
-        if (request.tabURL in websiteMap) {
-            websiteMap[request.tabURL].dailyLimit = websiteMap[request.tabURL].secsPassed + SECONDS_IN_MINUTE;
+            const numMins = Number(request.numMins);
+            websiteMap[request.tabURL].dailyLimit = websiteMap[request.tabURL].secsPassed + (SECONDS_IN_MINUTE * numMins);
         }
     } else if (request.addVisit) {
         if (request.tabURL in websiteMap) {

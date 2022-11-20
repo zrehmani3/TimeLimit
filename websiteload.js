@@ -24,11 +24,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           document.getElementById('extendOneMinute').style.display = 'none';
         }
         document.getElementById('extendOneMinute').onclick = function() {
-          chrome.runtime.sendMessage({tabURL: request.url, extendOneMinute: true});
+          chrome.runtime.sendMessage({tabURL: request.url, extendTimeLimit: true, numMins: 1});
           resetModal();
         }
         document.getElementById('extendLimit').onclick = function() {
-          chrome.runtime.sendMessage({tabURL: request.url, extendLimit: true});
+          chrome.runtime.sendMessage({tabURL: request.url, extendTimeLimit: true, numMins: 15});
           resetModal();
         }
         document.getElementById('ignoreToday').onclick = function() {
