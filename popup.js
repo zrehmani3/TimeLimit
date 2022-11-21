@@ -1,6 +1,6 @@
 let websiteMap = {};
 let websiteHistoryMap = {};
-const DEFAULT_LIMIT_MINUTES = 15;
+const DEFAULT_TIME_LIMIT_MINUTES = 15;
 
 chrome.runtime.onMessage.addListener(function(message, messageSender, sendResponse) {
     if (message.websiteMap) {
@@ -39,16 +39,16 @@ function constructWebsitesTrackedTable(tabURL) {
         let addWebsiteHTML = '<div class="addWebsite">';
         addWebsiteHTML += '<h3>Add <span style="text-decoration: underline;">' + tabURL + '</span> to TimeLimit tracker?</h3>';
         addWebsiteHTML += '<p>Minutes';
-        addWebsiteHTML += '<input style="margin-left: 8px; width: 32px; height: 22px; border: 1px solid #ccc; border-radius: 4px;" id="limitInput" name="limitInput">';
+        addWebsiteHTML += '<input style="margin-left: 8px; width: 32px; height: 22px; border: 1px solid #ccc; border-radius: 4px;" id="timeLimitInput" name="timeLimitInput">';
         addWebsiteHTML += '<button class="button" style="margin-left:8px;" id="addWebsiteButton">Add</button>';
         addWebsiteHTML += '</p>';
         addWebsiteHTML += '<hr />';
         addWebsiteHTML += '</div>';
         document.querySelector('.addWebsite').innerHTML = addWebsiteHTML;
-        document.getElementById('limitInput').defaultValue = DEFAULT_LIMIT_MINUTES;
+        document.getElementById('timeLimitInput').defaultValue = DEFAULT_TIME_LIMIT_MINUTES;
         document.getElementById('addWebsiteButton').onclick = function() {
-            const inputLimit = document.getElementById('limitInput').value;
-            chrome.runtime.sendMessage({website: tabURL, inputLimit: inputLimit}, function(response) {
+            const inputTimeLimit = document.getElementById('timeLimitInput').value;
+            chrome.runtime.sendMessage({website: tabURL, inputTimeLimit: inputTimeLimit}, function(response) {
                 websiteMap = response.websiteMap;
                 constructWebsitesTrackedTable(tabURL);
             });
@@ -90,10 +90,10 @@ function constructWebsitesTrackedTable(tabURL) {
             allTimeLimitsHTML += getMinutesFromSeconds(websiteMap[website].secsPassed);
             allTimeLimitsHTML += '</td>';
             allTimeLimitsHTML += '<td>';
-            allTimeLimitsHTML += (websiteMap[website].dailyLimit === Number.MAX_SAFE_INTEGER ? 'Ignore' : getMinutesFromSeconds(websiteMap[website].dailyLimit));
+            allTimeLimitsHTML += (getDailyTimeLimitForLegacyUsers(website) === Number.MAX_SAFE_INTEGER ? 'Ignore' : getMinutesFromSeconds(getDailyTimeLimitForLegacyUsers(website)));
             allTimeLimitsHTML += '</td>';
             allTimeLimitsHTML += '<td>';
-            allTimeLimitsHTML += '<input style="width: 32px; border: 1px solid #ccc; border-radius: 4px;" id="' + constructClassName('tableInputLimit', website) + '" name="' + constructClassName('tableInputLimit', website) + '">';
+            allTimeLimitsHTML += '<input style="width: 32px; border: 1px solid #ccc; border-radius: 4px;" id="' + constructClassName('tableInputTimeLimit', website) + '" name="' + constructClassName('tableInputTimeLimit', website) + '">';
             allTimeLimitsHTML += '</td>';
             allTimeLimitsHTML += '<td>';
             allTimeLimitsHTML += '<button class="button" id="' + constructClassName('updateButton', website) + '"><span>&#8634;</span></button>';
@@ -112,10 +112,10 @@ function constructWebsitesTrackedTable(tabURL) {
                 });
             };
 
-            const tableInputLimit = document.getElementById(constructClassName('tableInputLimit', currWebsite));
-            tableInputLimit.defaultValue = getMinutesFromSeconds(websiteMap[currWebsite].limit);
+            const tableInputTimeLimit = document.getElementById(constructClassName('tableInputTimeLimit', currWebsite));
+            tableInputTimeLimit.defaultValue = getMinutesFromSeconds(getTimeLimitForLegacyUsers(currWebsite));
             document.getElementById(constructClassName('updateButton', currWebsite)).onclick = function() {
-                chrome.runtime.sendMessage({updateWebsite: true, inputLimit: tableInputLimit.value, website: currWebsite}, function(response) {
+                chrome.runtime.sendMessage({updateWebsite: true, inputTimeLimit: tableInputTimeLimit.value, website: currWebsite}, function(response) {
                     websiteMap = response.websiteMap;
                     constructWebsitesTrackedTable(tabURL);
                 });
@@ -182,4 +182,12 @@ function constructWebsiteHistoryTable(tabURL) {
 
         document.querySelector('.websiteHistoryTable').innerHTML = websiteHistoryTableHTML;
     });
+}
+
+function getTimeLimitForLegacyUsers(website) {
+    return websiteMap[website].timeLimit ?? websiteMap[website].limit;
+}
+
+function getDailyTimeLimitForLegacyUsers(website) {
+    return websiteMap[website].dailyTimeLimit ?? websiteMap[website].dailyLimit;
 }

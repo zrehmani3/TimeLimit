@@ -2,7 +2,7 @@ let hasShownLimitPassedDialog = false;
 let hasEverShownLimitDialog = false;
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.secsPassed >= request.dailyLimit && !hasShownLimitPassedDialog) {
+  if (request.secsPassed >= request.dailyTimeLimit && !hasShownLimitPassedDialog) {
     fetch(chrome.runtime.getURL('/modal.html'))
       .then(response => response.text())
       .then(data => {
@@ -18,16 +18,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
           chrome.runtime.sendMessage({closeTab: true});
           hasShownLimitPassedDialog = false;
         };
-        if (request.dailyLimit === request.limit) {
-          document.getElementById('extendOneMinute').style.display = 'block';
+        if (request.dailyTimeLimit === request.timeLimit) {
+          document.getElementById('timeExtend1').style.display = 'block';
         } else {
-          document.getElementById('extendOneMinute').style.display = 'none';
+          document.getElementById('timeExtend1').style.display = 'none';
         }
-        document.getElementById('extendOneMinute').onclick = function() {
+        document.getElementById('timeExtend1').onclick = function() {
           chrome.runtime.sendMessage({tabURL: request.url, extendTimeLimit: true, numMins: 1});
           resetModal();
         }
-        document.getElementById('extendLimit').onclick = function() {
+        document.getElementById('timeExtend15').onclick = function() {
           chrome.runtime.sendMessage({tabURL: request.url, extendTimeLimit: true, numMins: 15});
           resetModal();
         }
